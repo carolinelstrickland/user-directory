@@ -1,24 +1,22 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
-
 const EmployeeTable = () => {
     const [sortType, setSortType] = useState("asc");
     console.log(sortType);
     const [employees, setEmployees] = useState([]);
     const [sortEmployees, setSortEmployees] = useState(employees);
     // console.log(sortEmployees);
-    
     useEffect(() => {
     axios.get("https://randomuser.me/api/?results=10&nat=us").then(response => {
         console.log(response);
         setEmployees([...response.data.results])
     })
-
     }, [])
-    console.log(employees)
+   //watching for for sorted employees state
+	useEffect(() => {
+		setSortEmployees(employees);
+  }, [employees]);
     const sortToggler = () => sortType === "asc" ? setSortType("desc") : setSortType("asc" )
-
     useEffect(() => {
 		sortType === "desc"
 			? setSortEmployees(
@@ -32,7 +30,6 @@ const EmployeeTable = () => {
 					)
 			  );
   }, [sortType]);
-
     return (
         <React.Fragment>
             <table>
@@ -50,7 +47,8 @@ const EmployeeTable = () => {
                         Email
                     </th>
                 </tr>
-                {employees.map(employee => {
+                {/* change here to sortEmployees instead of original employees */}
+                {[...sortEmployees].map(employee => {
                     return (
                         <tr key={employee.email}>
                             <td>
